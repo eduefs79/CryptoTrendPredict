@@ -6,7 +6,7 @@ services:
     env_file:
       - .env
     volumes:
-      - D:\bitcoin_project\mysql:/bitnami/mysql
+      - ./mysql:/bitnami/mysql
     networks:
       bitcoin_network:
         ipv4_address: 172.28.0.2  # Static IP for mysql
@@ -16,7 +16,7 @@ services:
   jupyter:
     image: jupyter/scipy-notebook:latest
     volumes:
-      - D:\bitcoin_project\files:/home/jovyan/files
+      - ./files:/home/jovyan/files
     networks:
       bitcoin_network:
         ipv4_address: 172.28.0.3  # Static IP for jupyter
