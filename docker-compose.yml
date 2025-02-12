@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: bitnami/mysql:latest
+    env_file:
+      - .env
+    volumes:
+      - D:\bitcoin_project\mysql:/bitnami/mysql
+    networks:
+      bitcoin_network:
+        ipv4_address: 172.28.0.2  # Static IP for mysql
+    ports:
+      - "3306:3306"
+
+  jupyter:
+    image: jupyter/scipy-notebook:latest
+    volumes:
+      - D:\bitcoin_project\files:/home/jovyan/files
+    networks:
+      bitcoin_network:
+        ipv4_address: 172.28.0.3  # Static IP for jupyter
+    ports:
+      - "8888:8888"
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+    command: start-notebook.sh --NotebookApp.token=''
+
+networks:
+  bitcoin_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16  # Define the subnet for static IP allocation
