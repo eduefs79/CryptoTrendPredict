@@ -39,7 +39,7 @@ docker-compose up --build
 This will build the Docker containers and start the services defined in the docker-compose.yml file.
 ### Step 6: Access the Application
 After the containers are up and running, you can access your application locally (adjust based on your docker-compose.yml setup):
-•	Visit [http://localhost:8000](http://localhost:8000) or the appropriate local URL.
+•	Visit [http://localhost:8888](http://localhost:8888) or the appropriate local URL.
 ### Step 7: Stopping the Containers
 To stop the Docker containers when you're done, run:
 docker-compose down
