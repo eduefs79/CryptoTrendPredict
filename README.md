@@ -30,7 +30,7 @@ If Docker is not installed, follow the installation instructions linked above.
 Before running Docker containers, you might need to adjust some settings in the docker-compose.yml file. Here are some things to check:
 •	Volumes: Ensure that the volumes are correctly mapped to your local directories if you're working with local data or files.
 •	Ports: Make sure the exposed ports do not conflict with other services running on your machine.
-•	Environment Variables: Some environment variables may need to be configured for your local environment. Check the .env.example file and create a .env file if needed.
+•	Environment Variables: Some environment variables may need to be configured for your local environment. Check the .env example file and create a .env file if needed.
 ### Step 4: Database Setup
 Make sure the MySQL user has been created for your application. You can follow the instructions in this guide to set up your database: [Create a Database in MySQL](https://docs.bitnami.com/general/infrastructure/mysql/configuration/create-database-mysql/).
 ### Step 5: Build and Start the Docker Containers
