@@ -1,4 +1,4 @@
-#CryptoTrendPredict
+# CryptoTrendPredict
 
 This project is designed to predict the next day's Bitcoin closing price using various technical indicators, including RSI, MACD, and Bollinger Bands.
 
