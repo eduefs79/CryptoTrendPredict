@@ -12,6 +12,9 @@ services:
         ipv4_address: 172.28.0.2  # Static IP for mysql
     ports:
       - "3306:3306"
+    environment:
+      - MYSQL_DATABASE=bitcoin_db  # Creates the database on startup
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}  # Ensures root password is set via .env
 
   jupyter:
     image: jupyter/scipy-notebook:latest
