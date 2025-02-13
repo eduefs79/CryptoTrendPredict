@@ -30,17 +30,15 @@ If Docker is not installed, follow the installation instructions linked above.
 Before running Docker containers, you might need to adjust some settings in the docker-compose.yml file. Here are some things to check:
 •	Volumes: Ensure that the volumes are correctly mapped to your local directories if you're working with local data or files.
 •	Ports: Make sure the exposed ports do not conflict with other services running on your machine.
-•	Environment Variables: Some environment variables may need to be configured for your local environment. Check the .env example file and create a .env file if needed.
-### Step 4: Database Setup
-Make sure the MySQL user has been created for your application. You can follow the instructions in this guide to set up your database: [Create a Database in MySQL](https://docs.bitnami.com/general/infrastructure/mysql/configuration/create-database-mysql/).
-### Step 5: Build and Start the Docker Containers
+•	Environment Variables: Some environment variables may need to be configured for your local environment. Check the .env file.
+### Step 4: Build and Start the Docker Containers
 Once the docker-compose.yml file is adjusted, you can build and start the containers:
 docker-compose up --build
 This will build the Docker containers and start the services defined in the docker-compose.yml file.
-### Step 6: Access the Application
+### Step 5: Access the Application
 After the containers are up and running, you can access your application locally (adjust based on your docker-compose.yml setup):
 •	Visit [http://localhost:8888](http://localhost:8888) or the appropriate local URL.
-### Step 7: Stopping the Containers
+### Step 6: Stopping the Containers
 To stop the Docker containers when you're done, run:
 docker-compose down
 This will stop and remove the containers.
