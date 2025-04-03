@@ -1,53 +1,115 @@
-# CryptoTrendPredict
+# 📈 Bitcoin Price Prediction with Financial Indicators
 
-This project is designed to predict the next day's Bitcoin closing price using various technical indicators, including RSI, MACD, and Bollinger Bands.
+This project uses multiple financial indicators, macroeconomic data (NASDAQ, S&P 500, VIX), and technical features (e.g., Bollinger Bands) to build and evaluate a machine learning model predicting the next-day price of Bitcoin.
 
-## Requirements
+## 🚀 Features
+- Fetches and stores data in **Snowflake**
+- Incorporates:
+  - Bitcoin OHLCV data
+  - Fear and Greed Index
+  - NASDAQ, S&P 500, VIX
+  - Bollinger Bands, Returns, Volatility
+- Performs data cleaning and joins using SQL
+- Linear Regression modeling with p-value feature selection
+- Rich visualizations:
+  - Actual vs. Predicted
+  - MAE/RMSE % over time
+  - Residuals, Error distribution
+  - Feature correlation & significance
 
-Before you start, make sure you have the following installed on your local machine:
+## 🛠️ Setup
 
-- [Docker](https://www.docker.com/get-started)
-- [Docker Compose](https://docs.docker.com/compose/install/)
-
-## Setup Instructions
-
-### Step 1: Clone the repository
-
+Install dependencies:
 
 ```bash
-
-git clone https://github.com/eduefs79/CryptoTrendPredict.git
-cd CryptoTrendPredict
+pip install -r requirements.txt
 ```
-### Step 2: Docker Setup
-Ensure that Docker and Docker Compose are installed on your local machine. You can verify this by running:
+
+## 📁 Folder Structure
+
+```
+.
+├── Bitcoin.ipynb        # Main notebook with full pipeline
+├── README.md            # Project overview
+├── requirements.txt     # Python dependencies
+└── assets/              # Exported charts and plots
+```
+
+## 🧠 Model Insights
+- R² ≈ 0.995
+- Average MAE ≈ $1,000
+- Most impactful features: `Close`, `NASDAQ`, `Bollinger Bands`
+- S&P 500 and VIX had low significance for short-term BTC prediction.
+
+## 📊 Visual Output Samples
+<img src="assets/ActualvsPredicted.png" width="600"/>
+<img src="assets/Distribution_Residuals.png" width="600"/>
+<img src="assets/RMSE_Error_Distribution.png" width="600"/>
+
+## 📌 Notes
+- Ensure your Snowflake account has the correct roles & table permissions.
+- FRED API used for macro indicators (S&P 500, VIX).
+- VPNs may block `yfinance` and some endpoints.
+
+---
+
+Made with ❤️ and insomnia.
+
+
+## 🔐 Snowflake Key Pair Authentication Setup
+
+This project uses **key pair authentication** to securely connect to Snowflake.
+
+### 🔧 Step 1: Generate Public/Private Key Pair
+
+#### For Linux/macOS (OpenSSL):
 ```bash
-docker --version
-docker-compose --version
+openssl genrsa -out rsa_key.pem 2048
+openssl rsa -in rsa_key.pem -pubout -out rsa_key.pub
 ```
-If Docker is not installed, follow the installation instructions linked above.
-### Step 3: Adjust the docker-compose.yml
-Before running Docker containers, you might need to adjust some settings in the docker-compose.yml file. Here are some things to check:
-•	Volumes: Ensure that the volumes are correctly mapped to your local directories if you're working with local data or files.
-•	Ports: Make sure the exposed ports do not conflict with other services running on your machine.
-•	Environment Variables: Some environment variables may need to be configured for your local environment. Check the .env file.
-### Step 4: Build and Start the Docker Containers
-Once the docker-compose.yml file is adjusted, you can build and start the containers:
-docker-compose up --build
-This will build the Docker containers and start the services defined in the docker-compose.yml file.
-### Step 5: Access the Application
-After the containers are up and running, you can access your application locally (adjust based on your docker-compose.yml setup):
-•	Visit [http://localhost:8888](http://localhost:8888) or the appropriate local URL.
-### Step 6: Stopping the Containers
-To stop the Docker containers when you're done, run:
-docker-compose down
-This will stop and remove the containers.
 
-## License
+#### For Windows (using PowerShell + OpenSSL):
+1. Install [OpenSSL for Windows](https://slproweb.com/products/Win32OpenSSL.html)
+2. Open PowerShell and run:
+```powershell
+openssl genrsa -out rsa_key.pem 2048
+openssl rsa -in rsa_key.pem -pubout -out rsa_key.pub
+```
 
-This project is licensed under the MIT License - see the [LICENSE](https://choosealicense.com/licenses/mit/) file for details.
+> 📝 You can also use **PuTTYgen**, but you'll need to convert the key to PEM format.
 
+---
 
-</span>
+### 🔐 Step 2: Upload the Public Key to Your Snowflake User
 
+1. Open your Snowflake WebUI or SQL editor and run:
 
+```sql
+ALTER USER your_user_name SET RSA_PUBLIC_KEY='your_public_key_contents';
+```
+
+> ❗ Remove the `-----BEGIN PUBLIC KEY-----` and `-----END PUBLIC KEY-----` lines when pasting into Snowflake.
+
+---
+
+### ⚙️ Step 3: Add the `.env` Variables
+
+Create a `.env` file and include:
+
+```ini
+PRIVATE_KEY_PATH=/path/to/rsa_key.pem
+SNOWFLAKE_ACCOUNT=your_account_id
+SNOWFLAKE_USER=your_user_name
+SNOWFLAKE_WAREHOUSE=your_warehouse
+SNOWFLAKE_DATABASE=CryptoDB
+SNOWFLAKE_SCHEMA=PUBLIC
+SNOWFLAKE_ROLE=ACCOUNTADMIN  # or another granted role
+```
+
+---
+
+### ✅ You're ready!
+
+The notebook will automatically use your private key to connect securely to Snowflake.
+
+📚 Official Docs: [Snowflake Key Pair Auth Guide](https://docs.snowflake.com/en/user-guide/key-pair-auth)
