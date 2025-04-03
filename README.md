@@ -42,9 +42,9 @@ pip install -r requirements.txt
 - S&P 500 and VIX had low significance for short-term BTC prediction.
 
 ## 📊 Visual Output Samples
-<img src="assets/actual_vs_predicted.png" width="600"/>
-<img src="assets/error_percent_vs_time.png" width="600"/>
-<img src="assets/feature_significance.png" width="600"/>
+<img src="assets/ActualvsPredicted.png" width="600"/>
+<img src="assets/Distribution_Residuals.png" width="600"/>
+<img src="assets/RMSE_Error_Distribution.png" width="600"/>
 
 ## 📌 Notes
 - Ensure your Snowflake account has the correct roles & table permissions.
