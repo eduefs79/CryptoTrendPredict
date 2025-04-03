@@ -19,7 +19,7 @@ It combines real-time data ingestion (from [CoinGecko](https://www.coingecko.com
 - ✅ **Feature engineering** (MACD, RSI, MFI, Bollinger Bands, volatility, etc.)
 - ✅ **Linear Regression modeling** with sklearn and statsmodels
 - ✅ Full error diagnostics: `MAE`, `RMSE`, `R²`, and percent error
-- ✅ **Plotly visualizations**: actual vs predicted, rolling errors, distribution plots
+- ✅ **Plotly visualizations**: actual vs predicted, rolling errors, KDE plots, and percent errors
 - ✅ Data persistence in **Snowflake**
 - ✅ Markdown-based **report generation**
 - ✅ Production-ready structure for GitHub and interviews
@@ -28,9 +28,13 @@ It combines real-time data ingestion (from [CoinGecko](https://www.coingecko.com
 
 ## 📸 Sample Visuals
 
-| Rolling MAE & RMSE | Error % over time | KDE Distributions |
-|--------------------|-------------------|-------------------|
-| ![](assets/rolling_errors.png) | ![](assets/error_pct.png) | ![](assets/kde_rmse.png) |
+| Actual vs Predicted | Rolling MAE & RMSE | % Error Over Time |
+|---------------------|--------------------|-------------------|
+| ![](assets/actual_vs_predicted.png) | ![](assets/rolling_errors.png) | ![](assets/error_pct.png) |
+
+| RMSE KDE Distribution | MAE KDE Distribution |
+|-----------------------|----------------------|
+| ![](assets/kde_rmse.png) | ![](assets/kde_mae.png) |
 
 ---
 
