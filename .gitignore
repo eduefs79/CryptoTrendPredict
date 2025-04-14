@@ -3,3 +3,4 @@ files/datasets/
 files/.ipynb_checkpoints/
 rsa_key*
 .env
+*.pyc
