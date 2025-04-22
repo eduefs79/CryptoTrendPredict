@@ -1,21 +1,48 @@
-# 📈 Bitcoin Price Prediction with Financial Indicators
+# 🧠 Crypto Price Prediction & Network Analysis
 
-This project uses multiple financial indicators, macroeconomic data (NASDAQ, S&P 500, VIX), and technical features (e.g., Bollinger Bands) to build and evaluate a machine learning model predicting the next-day price of Bitcoin.
+This project applies technical analysis, machine learning, and network science to model and forecast Bitcoin price behavior using signals from its correlated crypto ecosystem and macroeconomic context.
 
-## 🚀 Features
+---
+
+## 🚀 Project Highlights
+
+- ✅ BTC price prediction using **Random Forest** and **Linear Regression**
+- 📊 Technical indicators computed using the `ta` library (MACD, RSI, MFI, EMA, etc.)
+- 🌐 Integration with **Snowflake** for crypto data staging, historical persistence, and time series upserts
+- 🧩 Cluster discovery using:
+  - K-Means (based on return patterns)
+  - Agglomerative (correlation distance)
+  - **Louvain** (graph community detection)
+- 🌐 Network graph visualization of crypto relationships and influence
+- 🧮 Use of **macroeconomic indicators**, including:
+  - Gold (GC=F), Silver (SI=F), S&P 500 (^GSPC), Nasdaq (^NDX), VIX
+  - On-chain metrics: hash rate, miner revenue, active addresses, days destroyed
+- 🔬 Feature selection using **p-values** from regression analysis
+- 📈 Model evaluation via:
+  - R² Score
+  - RMSE
+  - Confusion Matrix (with interpretation labels)
+  - Actual vs Predicted line charts
+  - Residual analysis
+
+---
+
+## 🔧 Features
+
 - Fetches and stores data in **Snowflake**
-- Incorporates:
-  - Bitcoin OHLCV data
-  - Fear and Greed Index
-  - NASDAQ, S&P 500, VIX
-  - Bollinger Bands, Returns, Volatility
-- Performs data cleaning and joins using SQL
-- Linear Regression modeling with p-value feature selection
-- Rich visualizations:
-  - Actual vs. Predicted
-  - MAE/RMSE % over time
-  - Residuals, Error distribution
-  - Feature correlation & significance
+- Uses cluster-based filtering for predictive features
+- Combines traditional market, blockchain metrics, and crypto-specific TA
+
+### 🏛️ Macroeconomic + On-chain Data
+
+- Traditional assets:
+  - S&P 500 (^GSPC), Nasdaq (^NDX), Gold (GC=F), Silver (SI=F), VIX
+- On-chain metrics from [blockchain.com API]:
+  - Hash rate, miner revenue, Bitcoin days destroyed, difficulty, active addresses
+- BTC-to-local-currency tickers:
+  - BTC-INR, BTC-GBP, BTC-RUB, etc.
+
+---
 
 ## 🛠️ Setup
 
@@ -25,36 +52,37 @@ Install dependencies:
 pip install -r requirements.txt
 ```
 
+---
+
 ## 📁 Folder Structure
 
 ```
 .
-├── Bitcoin.ipynb        # Main notebook with full pipeline
+├── crypto.ipynb         # Main notebook with full pipeline
+├── utilities.py         # Utility functions for TA, clustering, Snowflake, etc.
+├── Assets_Categorized.csv # Categorized asset metadata
 ├── README.md            # Project overview
 ├── requirements.txt     # Python dependencies
 └── assets/              # Exported charts and plots
 ```
 
+---
+
 ## 🧠 Model Insights
-- R² ≈ 0.995
-- Average MAE ≈ $1,000
-- Most impactful features: `Close`, `NASDAQ`, `Bollinger Bands`
-- S&P 500 and VIX had low significance for short-term BTC prediction.
 
-## 📊 Visual Output Samples
-<img src="assets/ActualvsPredicted.png" width="600"/>
-<img src="assets/Distribution_Residuals.png" width="600"/>
-<img src="assets/RMSE_Error_Distribution.png" width="600"/>
-
-## 📌 Notes
-- Ensure your Snowflake account has the correct roles & table permissions.
-- FRED API used for macro indicators (S&P 500, VIX).
-- VPNs may block `yfinance` and some endpoints.
+- R² ≈ **0.9713**
+- RMSE ≈ **$2604**
+- Feature reduction based on p-values improved both metrics
 
 ---
 
-Made with ❤️ and insomnia.
+## 📌 Notes
 
+- Ensure your Snowflake user has correct **roles and permissions**
+- [FRED API] and `yfinance` are used for macro and market data
+- VPNs or regional restrictions may block some endpoints
+
+---
 
 ## 🔐 Snowflake Key Pair Authentication Setup
 
@@ -70,31 +98,27 @@ openssl rsa -in rsa_key.pem -pubout -out rsa_key.pub
 
 #### For Windows (using PowerShell + OpenSSL):
 1. Install [OpenSSL for Windows](https://slproweb.com/products/Win32OpenSSL.html)
-2. Open PowerShell and run:
+2. Run:
 ```powershell
 openssl genrsa -out rsa_key.pem 2048
 openssl rsa -in rsa_key.pem -pubout -out rsa_key.pub
 ```
 
-> 📝 You can also use **PuTTYgen**, but you'll need to convert the key to PEM format.
+> 📝 Or use PuTTYgen (convert to PEM format)
 
 ---
 
-### 🔐 Step 2: Upload the Public Key to Your Snowflake User
-
-1. Open your Snowflake WebUI or SQL editor and run:
+### 🔐 Step 2: Upload Public Key to Snowflake
 
 ```sql
 ALTER USER your_user_name SET RSA_PUBLIC_KEY='your_public_key_contents';
 ```
 
-> ❗ Remove the `-----BEGIN PUBLIC KEY-----` and `-----END PUBLIC KEY-----` lines when pasting into Snowflake.
+> ⚠️ Remove the `-----BEGIN PUBLIC KEY-----` and `END` lines
 
 ---
 
-### ⚙️ Step 3: Add the `.env` Variables
-
-Create a `.env` file and include:
+### ⚙️ Step 3: Add `.env` Variables
 
 ```ini
 PRIVATE_KEY_PATH=/path/to/rsa_key.pem
@@ -103,13 +127,26 @@ SNOWFLAKE_USER=your_user_name
 SNOWFLAKE_WAREHOUSE=your_warehouse
 SNOWFLAKE_DATABASE=CryptoDB
 SNOWFLAKE_SCHEMA=PUBLIC
-SNOWFLAKE_ROLE=ACCOUNTADMIN  # or another granted role
+SNOWFLAKE_ROLE=ACCOUNTADMIN
 ```
 
 ---
 
-### ✅ You're ready!
+### ✅ You're Ready!
 
-The notebook will automatically use your private key to connect securely to Snowflake.
+Your notebook will now securely connect to Snowflake using your key.
 
-📚 Official Docs: [Snowflake Key Pair Auth Guide](https://docs.snowflake.com/en/user-guide/key-pair-auth)
+📚 [Snowflake Key Pair Auth Docs](https://docs.snowflake.com/en/user-guide/key-pair-auth)
+
+---
+
+## 🧠 Built With
+
+- `pandas`, `scikit-learn`, `statsmodels`, `matplotlib`, `seaborn`
+- `ta` & `talib` for technical analysis
+- `networkx` & `python-louvain` for crypto correlation graphs
+- `yfinance`, CoinGecko API, blockchain.com for data ingestion
+
+---
+
+Made with ❤️ and insomnia.
