@@ -4,3 +4,5 @@ files/.ipynb_checkpoints/
 rsa_key*
 .env
 *.pyc
+*ipynb_checkpoints
+.Trash*

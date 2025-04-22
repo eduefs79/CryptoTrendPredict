@@ -1,0 +1,109 @@
+name,realticker,category,market,ticker
+Bitcoin,BTC,Layer 1,Crypto,BTC-USD
+Ethereum,ETH,Layer 1,Crypto,ETH-USD
+Tether,USDT,Stablecoin,Crypto,USDT-USD
+XRP,XRP,Layer 1,Crypto,XRP-USD
+BNB,BNB,Layer 1,Crypto,BNB-USD
+Solana,SOL,Layer 1,Crypto,SOL-USD
+USDC,USDC,Stablecoin,Crypto,USDC-USD
+Dogecoin,DOGE,Memecoin,Crypto,DOGE-USD
+Cardano,ADA,Layer 1,Crypto,ADA-USD
+TRON,TRX,Layer 1,Crypto,TRX-USD
+UNUS SED LEO,LEO,Exchange Token,Crypto,LEO-USD
+Chainlink,LINK,Other,Crypto,LINK-USD
+Toncoin,TON,Other,Crypto,TON-USD
+Stellar,XLM,Layer 1,Crypto,XLM-USD
+Avalanche,AVAX,Layer 1,Crypto,AVAX-USD
+Sui,SUI,Other,Crypto,SUI-USD
+Shiba Inu,SHIB,Memecoin,Crypto,SHIB-USD
+Hedera,HBAR,Layer 1,Crypto,HBAR-USD
+Litecoin,LTC,Layer 1,Crypto,LTC-USD
+Polkadot,DOT,Layer 1,Crypto,DOT-USD
+MANTRA,OM,Other,Crypto,OM-USD
+Bitcoin Cash,BCH,Other,Crypto,BCH-USD
+Bitget Token,BGB,Exchange Token,Crypto,BGB-USD
+Dai,DAI,Stablecoin,Crypto,DAI-USD
+Ethena USDe,USDe,Stablecoin,Crypto,USDe-USD
+Hyperliquid,HYPE,Other,Crypto,HYPE-USD
+Monero,XMR,Layer 1,Crypto,XMR-USD
+Uniswap,UNI,DeFi,Crypto,UNI-USD
+Pi,PI,Other,Crypto,PI-USD
+Pepe,PEPE,Memecoin,Crypto,PEPE-USD
+NEAR Protocol,NEAR,Layer 1,Crypto,NEAR-USD
+Aptos,APT,Other,Crypto,APT-USD
+OKB,OKB,Exchange Token,Crypto,OKB-USD
+Ondo,ONDO,Other,Crypto,ONDO-USD
+Cronos,CRO,Other,Crypto,CRO-USD
+Mantle,MNT,Other,Crypto,MNT-USD
+Ethereum Classic,ETC,Layer 1,Crypto,ETC-USD
+Internet Computer,ICP,Layer 1,Crypto,ICP-USD
+Aave,AAVE,DeFi,Crypto,AAVE-USD
+First Digital USD,FDUSD,Stablecoin,Crypto,FDUSD-USD
+POL (prev. MATIC),POL,Other,Crypto,POL-USD
+Cosmos,ATOM,Layer 1,Crypto,ATOM-USD
+GateToken,GT,Exchange Token,Crypto,GT-USD
+VeChain,VET,Other,Crypto,VET-USD
+OFFICIAL TRUMP,TRUMP,Memecoin,Crypto,TRUMP-USD
+Filecoin,FIL,Other,Crypto,FIL-USD
+Kaspa,KAS,Other,Crypto,KAS-USD
+Ethena,ENA,Other,Crypto,ENA-USD
+Render,RENDER,Other,Crypto,RENDER-USD
+Celestia,TIA,Other,Crypto,TIA-USD
+Algorand,ALGO,Layer 1,Crypto,ALGO-USD
+Arbitrum,ARB,Other,Crypto,ARB-USD
+Sonic (prev. FTM),S,Other,Crypto,S-USD
+KuCoin Token,KCS,Exchange Token,Crypto,KCS-USD
+DeXe,DEXE,DeFi,Crypto,DEXE-USD
+EOS,EOS,Other,Crypto,EOS-USD
+Optimism,OP,Other,Crypto,OP-USD
+Jupiter,JUP,Other,Crypto,JUP-USD
+Maker,MKR,DeFi,Crypto,MKR-USD
+XDC Network,XDC,Other,Crypto,XDC-USD
+Story,IP,Other,Crypto,IP-USD
+Artificial Superintelligence Alliance,FET,Other,Crypto,FET-USD
+Worldcoin,WLD,Other,Crypto,WLD-USD
+Movement,MOVE,Other,Crypto,MOVE-USD
+Stacks,STX,Other,Crypto,STX-USD
+Bonk,BONK,Memecoin,Crypto,BONK-USD
+Injective,INJ,Other,Crypto,INJ-USD
+Four,FORM,Other,Crypto,FORM-USD
+Quant,QNT,Other,Crypto,QNT-USD
+Flare,FLR,Other,Crypto,FLR-USD
+The Graph,GRT,DeFi,Crypto,GRT-USD
+Sei,SEI,Other,Crypto,SEI-USD
+Immutable,IMX,Other,Crypto,IMX-USD
+Theta Network,THETA,Other,Crypto,THETA-USD
+Lido DAO,LDO,DeFi,Crypto,LDO-USD
+Tether Gold,XAUt,Stablecoin,Crypto,XAUt-USD
+PayPal USD,PYUSD,Stablecoin,Crypto,PYUSD-USD
+Nexo,NEXO,DeFi,Crypto,NEXO-USD
+Tezos,XTZ,Layer 1,Crypto,XTZ-USD
+PAX Gold,PAXG,Stablecoin,Crypto,PAXG-USD
+Kaia,KAIA,Other,Crypto,KAIA-USD
+Gala,GALA,Other,Crypto,GALA-USD
+The Sandbox,SAND,Other,Crypto,SAND-USD
+Curve DAO Token,CRV,DeFi,Crypto,CRV-USD
+Zcash,ZEC,Other,Crypto,ZEC-USD
+Berachain,BERA,Other,Crypto,BERA-USD
+BitTorrent [New],BTT,Other,Crypto,BTT-USD
+IOTA,IOTA,Other,Crypto,IOTA-USD
+Bitcoin SV,BSV,Other,Crypto,BSV-USD
+Flow,FLOW,Other,Crypto,FLOW-USD
+Jito,JTO,Other,Crypto,JTO-USD
+FLOKI,FLOKI,Memecoin,Crypto,FLOKI-USD
+Raydium,RAY,Other,Crypto,RAY-USD
+Cboe Volatility Index,VIX,Volatility Index,Real Market,^VIX
+Nasdaq,^NDX,Cap Weighting,Real Market,^NDX
+S&P 500,^GSPC,Market Index,Real Market,^GSPC
+Gold,GC=F,Gold,Real Market,GC=F
+Silver,SI=F,Silver,Real Market,SI=F
+Bitcoin India,BTC,Layer 1,Crypto,BTC-INR
+Bitcoin Vietnam,BTC,Layer 1,Crypto,BTC-VND
+Bitcoin Pakistan,BTC,Layer 1,Crypto,BTC-PKR
+Bitcoin Brazil,BTC,Layer 1,Crypto,BTC-BRL
+Bitcoin Thailand,BTC,Layer 1,Crypto,BTC-THB
+Bitcoin Russia,BTC,Layer 1,Crypto,BTC-RUB
+Bitcoin China,BTC,Layer 1,Crypto,BTC-CNY
+Bitcoin Nigeria,BTC,Layer 1,Crypto,BTC-NGN
+Bitcoin Philippines,BTC,Layer 1,Crypto,BTC-PHP
+Bitcoin United Kingdom,BTC,Layer 1,Crypto,BTC-GBP

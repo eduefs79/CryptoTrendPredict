@@ -1,46 +1,23 @@
-version: '3.8'
-
 services:
-  mysql:
-    image: mysql:latest
-    env_file:
-      - .env
-    volumes:
-      - ./mysql:/var/lib/mysql
-    networks:
-      bitcoin_network:
-        ipv4_address: 172.29.0.2  # Static IP for mysql
-    ports:
-      - "3306:3306"
-    environment:
-      - MYSQL_DATABASE=bitcoin_db  # Creates the database on startup
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}  # Ensures root password is set via .env
-      - MYSQL_USER=bitcoin_user
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}  # Ensures user password is set via .env
-      - MYSQL_ROOT_HOST=%  # Allows remote connections for root
-  
-
   jupyter:
-    image: jupyter/scipy-notebook:latest
+    image: cryptotrendpredict:latest
+    container_name: jupyter-crypto
     env_file:
       - .env
     volumes:
-      - ./files:/home/jovyan/files
+      - ./:/home/jovyan/files
     networks:
       bitcoin_network:
-        ipv4_address: 172.29.0.3  # Static IP for jupyter
+        ipv4_address: 172.29.0.3
     ports:
       - "8888:8888"
     environment:
       - JUPYTER_ENABLE_LAB=yes
-      - MYSQL_DATABASE=bitcoin_db  # Creates the database on startup
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}  # Ensures root password is set via .env
-      - MYSQL_USER=bitcoin_user
-    command: start-notebook.sh --NotebookApp.token=''
+    command: jupyter lab --ip=0.0.0.0 --no-browser --allow-root --NotebookApp.token=''
 
 networks:
   bitcoin_network:
     driver: bridge
     ipam:
       config:
-        - subnet: 172.29.0.0/16  # Define the subnet for static IP allocation
+        - subnet: 172.29.0.0/16
