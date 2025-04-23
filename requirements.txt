@@ -24,3 +24,5 @@ fastparquet
 networkx
 python-louvain
 requests
+get-all-tickers
+lxml

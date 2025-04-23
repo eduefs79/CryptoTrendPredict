@@ -555,8 +555,9 @@ def kmeans_cluster_from_price_data(df, value_col='close', min_k=2, max_k=10, plo
 
 def cluster_from_correlation(df, value_col='close', method='complete', k=4, plot=False):
 
-
+    df = df.tail(df.shape[0] - 1)
     price_df = df.pivot(index='date', columns='ticker', values=value_col)
+    price_df = price_df.replace(0, np.nan).dropna(axis=1, thresh=int(0.85 * len(price_df)))
     returns = np.log(price_df / price_df.shift(1)).fillna(0)
     
     # Step 2: Correlation + distance matrix
@@ -593,7 +594,7 @@ def cluster_from_correlation(df, value_col='close', method='complete', k=4, plot
 def louvain_from_returns(df, value_col='close', min_corr=0.5, plot=True):
     # Step 1: Pivot + log returns
     price_df = df.pivot(index='date', columns='ticker', values=value_col)
-    price_df = price_df.replace(0, np.nan).dropna(axis=1, thresh=int(0.8 * len(price_df)))
+    price_df = price_df.replace(0, np.nan).dropna(axis=1, thresh=int(0.85 * len(price_df)))
     price_df = price_df.dropna()
     returns = np.log(price_df / price_df.shift(1)).dropna()
 
@@ -605,11 +606,24 @@ def louvain_from_returns(df, value_col='close', min_corr=0.5, plot=True):
     for i in corr.columns:
         for j in corr.columns:
             if i != j and corr.loc[i, j] > min_corr:
-                G.add_edge(i, j, weight=corr.loc[i, j])
-
+                G.add_edge(i, j,weight=corr.loc[i, j],distance=1 - corr.loc[i, j])  
+                
     # Step 4: Louvain clustering
     partition = community.best_partition(G, weight='weight')  # Louvain
     nx.set_node_attributes(G, partition, 'cluster')
+
+    # Option 1: Create DataFrame with cluster
+    cluster_df = pd.DataFrame.from_dict(partition, orient='index', columns=['cluster']).reset_index().rename(columns={'index': 'ticker'})
+
+    # Option 2: Print BTC's neighbors in its cluster
+    btc_cluster = partition.get('BTC-USD', None)
+    btc_neighbors = [ticker for ticker, c in partition.items() if c == btc_cluster and ticker != 'BTC-USD']
+    print(f"🔗 BTC cluster ({btc_cluster}) members:", btc_neighbors)
+
+    # Option 1 (continued): return returns dataframe with cluster-mapped columns
+    clustered_returns = returns.copy()
+    clustered_returns.columns.name = None  # remove pivot-level name
+    clustered_returns = clustered_returns.loc[:, clustered_returns.columns.intersection(cluster_df['ticker'])]
 
     # Optional: plot the graph
     if plot:
@@ -625,8 +639,9 @@ def louvain_from_returns(df, value_col='close', min_corr=0.5, plot=True):
         plt.axis('off')
         plt.show()
 
-    # Output: DataFrame of ticker + cluster
-    return pd.DataFrame.from_dict(partition, orient='index', columns=['cluster']).reset_index().rename(columns={'index': 'ticker'})
+    # Return: cluster labels, Louvain graph, and filtered returns
+    return cluster_df, G, clustered_returns
+
 
 
 def plot_ticker_neighborhood(G, central_node='BTC-USD', hops=2):

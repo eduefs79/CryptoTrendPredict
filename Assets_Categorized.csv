@@ -92,11 +92,11 @@ Flow,FLOW,Other,Crypto,FLOW-USD
 Jito,JTO,Other,Crypto,JTO-USD
 FLOKI,FLOKI,Memecoin,Crypto,FLOKI-USD
 Raydium,RAY,Other,Crypto,RAY-USD
-Cboe Volatility Index,VIX,Volatility Index,Real Market,^VIX
-Nasdaq,^NDX,Cap Weighting,Real Market,^NDX
-S&P 500,^GSPC,Market Index,Real Market,^GSPC
-Gold,GC=F,Gold,Real Market,GC=F
-Silver,SI=F,Silver,Real Market,SI=F
+Cboe Volatility Index,VIX,Volatility Index,Index,^VIX
+Nasdaq,^NDX,Cap Weighting,Index,^NDX
+S&P 500,^GSPC,Market Index,Index,^GSPC
+Gold,GC=F,Gold,Gold,GC=F
+Silver,SI=F,Silver,Silver,SI=F
 Bitcoin India,BTC,Layer 1,Crypto,BTC-INR
 Bitcoin Vietnam,BTC,Layer 1,Crypto,BTC-VND
 Bitcoin Pakistan,BTC,Layer 1,Crypto,BTC-PKR
@@ -107,3 +107,104 @@ Bitcoin China,BTC,Layer 1,Crypto,BTC-CNY
 Bitcoin Nigeria,BTC,Layer 1,Crypto,BTC-NGN
 Bitcoin Philippines,BTC,Layer 1,Crypto,BTC-PHP
 Bitcoin United Kingdom,BTC,Layer 1,Crypto,BTC-GBP
+Adobe Inc.,ADBE,Nasdaq-100,Stock,ADBE
+Advanced Micro Devices,AMD,Nasdaq-100,Stock,AMD
+Airbnb,ABNB,Nasdaq-100,Stock,ABNB
+Alphabet Inc. (Class A),GOOGL,Nasdaq-100,Stock,GOOGL
+Alphabet Inc. (Class C),GOOG,Nasdaq-100,Stock,GOOG
+Amazon,AMZN,Nasdaq-100,Stock,AMZN
+American Electric Power,AEP,Nasdaq-100,Stock,AEP
+Amgen,AMGN,Nasdaq-100,Stock,AMGN
+Analog Devices,ADI,Nasdaq-100,Stock,ADI
+Ansys,ANSS,Nasdaq-100,Stock,ANSS
+Apple Inc.,AAPL,Nasdaq-100,Stock,AAPL
+Applied Materials,AMAT,Nasdaq-100,Stock,AMAT
+AppLovin,APP,Nasdaq-100,Stock,APP
+Arm Holdings,ARM,Nasdaq-100,Stock,ARM
+ASML Holding,ASML,Nasdaq-100,Stock,ASML
+AstraZeneca,AZN,Nasdaq-100,Stock,AZN
+Atlassian,TEAM,Nasdaq-100,Stock,TEAM
+Autodesk,ADSK,Nasdaq-100,Stock,ADSK
+Automatic Data Processing,ADP,Nasdaq-100,Stock,ADP
+Axon Enterprise,AXON,Nasdaq-100,Stock,AXON
+Baker Hughes,BKR,Nasdaq-100,Stock,BKR
+Biogen,BIIB,Nasdaq-100,Stock,BIIB
+Booking Holdings,BKNG,Nasdaq-100,Stock,BKNG
+Broadcom,AVGO,Nasdaq-100,Stock,AVGO
+Cadence Design Systems,CDNS,Nasdaq-100,Stock,CDNS
+CDW Corporation,CDW,Nasdaq-100,Stock,CDW
+Charter Communications,CHTR,Nasdaq-100,Stock,CHTR
+Cintas,CTAS,Nasdaq-100,Stock,CTAS
+Cisco,CSCO,Nasdaq-100,Stock,CSCO
+Coca-Cola Europacific Partners,CCEP,Nasdaq-100,Stock,CCEP
+Cognizant,CTSH,Nasdaq-100,Stock,CTSH
+Comcast,CMCSA,Nasdaq-100,Stock,CMCSA
+Constellation Energy,CEG,Nasdaq-100,Stock,CEG
+Copart,CPRT,Nasdaq-100,Stock,CPRT
+CoStar Group,CSGP,Nasdaq-100,Stock,CSGP
+Costco,COST,Nasdaq-100,Stock,COST
+CrowdStrike,CRWD,Nasdaq-100,Stock,CRWD
+CSX Corporation,CSX,Nasdaq-100,Stock,CSX
+Datadog,DDOG,Nasdaq-100,Stock,DDOG
+DexCom,DXCM,Nasdaq-100,Stock,DXCM
+Diamondback Energy,FANG,Nasdaq-100,Stock,FANG
+DoorDash,DASH,Nasdaq-100,Stock,DASH
+Electronic Arts,EA,Nasdaq-100,Stock,EA
+Exelon,EXC,Nasdaq-100,Stock,EXC
+Fastenal,FAST,Nasdaq-100,Stock,FAST
+Fortinet,FTNT,Nasdaq-100,Stock,FTNT
+GE HealthCare,GEHC,Nasdaq-100,Stock,GEHC
+Gilead Sciences,GILD,Nasdaq-100,Stock,GILD
+GlobalFoundries,GFS,Nasdaq-100,Stock,GFS
+Honeywell,HON,Nasdaq-100,Stock,HON
+Idexx Laboratories,IDXX,Nasdaq-100,Stock,IDXX
+Intel,INTC,Nasdaq-100,Stock,INTC
+Intuit,INTU,Nasdaq-100,Stock,INTU
+Intuitive Surgical,ISRG,Nasdaq-100,Stock,ISRG
+Keurig Dr Pepper,KDP,Nasdaq-100,Stock,KDP
+KLA Corporation,KLAC,Nasdaq-100,Stock,KLAC
+Kraft Heinz,KHC,Nasdaq-100,Stock,KHC
+Lam Research,LRCX,Nasdaq-100,Stock,LRCX
+Linde plc,LIN,Nasdaq-100,Stock,LIN
+Lululemon Athletica,LULU,Nasdaq-100,Stock,LULU
+Marriott International,MAR,Nasdaq-100,Stock,MAR
+Marvell Technology,MRVL,Nasdaq-100,Stock,MRVL
+MercadoLibre,MELI,Nasdaq-100,Stock,MELI
+Meta Platforms,META,Nasdaq-100,Stock,META
+Microchip Technology,MCHP,Nasdaq-100,Stock,MCHP
+Micron Technology,MU,Nasdaq-100,Stock,MU
+Microsoft,MSFT,Nasdaq-100,Stock,MSFT
+MicroStrategy,MSTR,Nasdaq-100,Stock,MSTR
+Mondelez International,MDLZ,Nasdaq-100,Stock,MDLZ
+MongoDB Inc.,MDB,Nasdaq-100,Stock,MDB
+Monster Beverage,MNST,Nasdaq-100,Stock,MNST
+"Netflix, Inc.",NFLX,Nasdaq-100,Stock,NFLX
+Nvidia,NVDA,Nasdaq-100,Stock,NVDA
+NXP Semiconductors,NXPI,Nasdaq-100,Stock,NXPI
+O'Reilly Automotive,ORLY,Nasdaq-100,Stock,ORLY
+Old Dominion Freight Line,ODFL,Nasdaq-100,Stock,ODFL
+Onsemi,ON,Nasdaq-100,Stock,ON
+Paccar,PCAR,Nasdaq-100,Stock,PCAR
+Palantir Technologies,PLTR,Nasdaq-100,Stock,PLTR
+Palo Alto Networks,PANW,Nasdaq-100,Stock,PANW
+Paychex,PAYX,Nasdaq-100,Stock,PAYX
+PayPal,PYPL,Nasdaq-100,Stock,PYPL
+PDD Holdings,PDD,Nasdaq-100,Stock,PDD
+PepsiCo,PEP,Nasdaq-100,Stock,PEP
+Qualcomm,QCOM,Nasdaq-100,Stock,QCOM
+Regeneron Pharmaceuticals,REGN,Nasdaq-100,Stock,REGN
+Roper Technologies,ROP,Nasdaq-100,Stock,ROP
+Ross Stores,ROST,Nasdaq-100,Stock,ROST
+Starbucks,SBUX,Nasdaq-100,Stock,SBUX
+Synopsys,SNPS,Nasdaq-100,Stock,SNPS
+Take-Two Interactive,TTWO,Nasdaq-100,Stock,TTWO
+T-Mobile US,TMUS,Nasdaq-100,Stock,TMUS
+"Tesla, Inc.",TSLA,Nasdaq-100,Stock,TSLA
+Texas Instruments,TXN,Nasdaq-100,Stock,TXN
+Trade Desk (The),TTD,Nasdaq-100,Stock,TTD
+Verisk Analytics,VRSK,Nasdaq-100,Stock,VRSK
+Vertex Pharmaceuticals,VRTX,Nasdaq-100,Stock,VRTX
+Warner Bros. Discovery,WBD,Nasdaq-100,Stock,WBD
+"Workday, Inc.",WDAY,Nasdaq-100,Stock,WDAY
+Xcel Energy,XEL,Nasdaq-100,Stock,XEL
+Zscaler,ZS,Nasdaq-100,Stock,ZS
