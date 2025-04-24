@@ -74,18 +74,18 @@ The following diagram shows the overall pipeline from data ingestion to model ev
 
 ```mermaid
 flowchart TD
-    A[Yahoo Finance / Snowflake SQL] --> B[Raw OHLCV Data]
-    B --> C[Clean & Impute Missing Values]
-    C --> D1[Price Matrix (Pivoted)]
-    C --> D2[TA Features (BTC)]
-    D1 --> E[Cluster Analysis (Louvain)]
+    A[Data Ingestion] --> B[Raw OHLCV]
+    B --> C[Data Cleaning]
+    C --> D1[Pivoted Prices]
+    C --> D2[TA Features]
+    D1 --> E[Louvain Clustering]
     D2 --> F[Linear Regression]
-    E --> G[Peer Prices]
+    E --> G[Peer Selection]
     G --> F
     G --> H[LSTM Model]
-    F --> I[Metrics & Residuals]
+    F --> I[Model Metrics]
     H --> I
-    I --> J[Model Evaluation]
+    I --> J[Evaluation Summary]
 ```
 
 ---
