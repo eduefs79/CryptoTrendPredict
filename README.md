@@ -6,13 +6,13 @@ This project applies technical analysis, machine learning, and network science t
 
 ## 🚀 Project Highlights
 
-- ✅ BTC price prediction using **Random Forest** and **Linear Regression**
+- ✅ BTC price prediction **Linear Regression** and **LSTM**
 - 📊 Technical indicators computed using the `ta` library (MACD, RSI, MFI, EMA, etc.)
 - 🌐 Integration with **Snowflake** for crypto data staging, historical persistence, and time series upserts
-- 🧩 Cluster discovery using:
+- 🧹 Cluster discovery using:
   - K-Means (based on return patterns)
   - Agglomerative (correlation distance)
-  - **Louvain** (graph community detection)
+  - **Louvain** (graph community detection on correlation networks)
 - 🌐 Network graph visualization of crypto relationships and influence
 - 🧮 Use of **macroeconomic indicators**, including:
   - Gold (GC=F), Silver (SI=F), S&P 500 (^GSPC), Nasdaq (^NDX), VIX
@@ -21,7 +21,6 @@ This project applies technical analysis, machine learning, and network science t
 - 📈 Model evaluation via:
   - R² Score
   - RMSE
-  - Confusion Matrix (with interpretation labels)
   - Actual vs Predicted line charts
   - Residual analysis
 
@@ -33,7 +32,7 @@ This project applies technical analysis, machine learning, and network science t
 - Uses cluster-based filtering for predictive features
 - Combines traditional market, blockchain metrics, and crypto-specific TA
 
-### 🏛️ Macroeconomic + On-chain Data
+### 🏩 Macroeconomic + On-chain Data
 
 - Traditional assets:
   - S&P 500 (^GSPC), Nasdaq (^NDX), Gold (GC=F), Silver (SI=F), VIX
@@ -70,9 +69,22 @@ pip install -r requirements.txt
 
 ## 🧠 Model Insights
 
-- R² ≈ **0.9713**
-- RMSE ≈ **$2604**
-- Feature reduction based on p-values improved both metrics
+### ✅ Linear Regression (with reduced features)
+
+- R² Score: **0.9756**
+- RMSE: **\$2412**
+
+### ✅ LSTM (price delta prediction)
+
+- R² Score: **0.9826**
+- RMSE: **\$2097**
+
+### 💡 Observations
+
+- Predicting **price delta** (instead of raw price) significantly improved LSTM's stability and interpretability.
+- **LSTM now outperforms linear regression**, especially in volatile windows.
+- Models trained with **Louvain-filtered features** show higher signal strength by reducing noise from low-correlation assets.
+- All performance metrics are computed with **inverse-transformed prices** to preserve dollar-accuracy.
 
 ---
 
@@ -91,14 +103,17 @@ This project uses **key pair authentication** to securely connect to Snowflake.
 ### 🔧 Step 1: Generate Public/Private Key Pair
 
 #### For Linux/macOS (OpenSSL):
+
 ```bash
 openssl genrsa -out rsa_key.pem 2048
 openssl rsa -in rsa_key.pem -pubout -out rsa_key.pub
 ```
 
 #### For Windows (using PowerShell + OpenSSL):
+
 1. Install [OpenSSL for Windows](https://slproweb.com/products/Win32OpenSSL.html)
 2. Run:
+
 ```powershell
 openssl genrsa -out rsa_key.pem 2048
 openssl rsa -in rsa_key.pem -pubout -out rsa_key.pub
@@ -149,4 +164,14 @@ Your notebook will now securely connect to Snowflake using your key.
 
 ---
 
+## 🤖 What's Next
+
+- Animate Louvain clusters over time (rolling windows)
+- Score and track BTC’s influence in the network via graph centrality
+- Explore hybrid models (LSTM + Attention) and multistep forecasting
+- Expose the best model as a REST API or Power BI dashboard
+
+---
+
 Made with ❤️ and insomnia.
+

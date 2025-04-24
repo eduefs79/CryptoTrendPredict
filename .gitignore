@@ -6,3 +6,4 @@ rsa_key*
 *.pyc
 *ipynb_checkpoints
 .Trash*
+*.parquet

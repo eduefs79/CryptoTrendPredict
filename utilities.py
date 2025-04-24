@@ -557,7 +557,9 @@ def cluster_from_correlation(df, value_col='close', method='complete', k=4, plot
 
     df = df.tail(df.shape[0] - 1)
     price_df = df.pivot(index='date', columns='ticker', values=value_col)
-    price_df = price_df.replace(0, np.nan).dropna(axis=1, thresh=int(0.85 * len(price_df)))
+    #price_df = price_df.replace(0, np.nan).dropna(axis=1, thresh=int(0.85 * len(price_df)))
+    price_df = price_df.ffill().bfill().fillna(price_df.mean())
+
     returns = np.log(price_df / price_df.shift(1)).fillna(0)
     
     # Step 2: Correlation + distance matrix
@@ -591,56 +593,75 @@ def cluster_from_correlation(df, value_col='close', method='complete', k=4, plot
     return cluster_df
 
 
-def louvain_from_returns(df, value_col='close', min_corr=0.5, plot=True):
-    # Step 1: Pivot + log returns
+def louvain_from_returns(df, value_col='close', min_corr=0.5, plot=True, show_mixed_only=False):
+    import numpy as np
+    import pandas as pd
+    import networkx as nx
+    import matplotlib.pyplot as plt
+    import community  # python-louvain
+    from matplotlib.cm import get_cmap
+
+    # Step 1: Pivot + fill gaps due to mixed trading calendars
     price_df = df.pivot(index='date', columns='ticker', values=value_col)
-    price_df = price_df.replace(0, np.nan).dropna(axis=1, thresh=int(0.85 * len(price_df)))
-    price_df = price_df.dropna()
+    price_df = price_df.ffill().bfill().fillna(price_df.mean())
+
+    # Optional: print tickers being used
+    print("✅ Tickers included after fill:", price_df.columns.tolist())
+
+    # Step 2: Compute log returns
     returns = np.log(price_df / price_df.shift(1)).dropna()
 
-    # Step 2: Correlation matrix
+    # Step 3: Correlation matrix
     corr = returns.corr()
 
-    # Step 3: Build graph with edges above correlation threshold
+    # Step 4: Build correlation graph
     G = nx.Graph()
     for i in corr.columns:
         for j in corr.columns:
             if i != j and corr.loc[i, j] > min_corr:
-                G.add_edge(i, j,weight=corr.loc[i, j],distance=1 - corr.loc[i, j])  
-                
-    # Step 4: Louvain clustering
-    partition = community.best_partition(G, weight='weight')  # Louvain
-    nx.set_node_attributes(G, partition, 'cluster')
+                G.add_edge(i, j, weight=corr.loc[i, j], distance=1 - corr.loc[i, j])
 
-    # Option 1: Create DataFrame with cluster
+    # Step 5: Louvain clustering
+    partition = community.best_partition(G, weight='weight')
+    nx.set_node_attributes(G, partition, 'cluster')
     cluster_df = pd.DataFrame.from_dict(partition, orient='index', columns=['cluster']).reset_index().rename(columns={'index': 'ticker'})
 
-    # Option 2: Print BTC's neighbors in its cluster
-    btc_cluster = partition.get('BTC-USD', None)
-    btc_neighbors = [ticker for ticker, c in partition.items() if c == btc_cluster and ticker != 'BTC-USD']
-    print(f"🔗 BTC cluster ({btc_cluster}) members:", btc_neighbors)
+    # Print clusters
+    print("📊 Louvain Clusters:")
+    for cid in set(partition.values()):
+        members = [ticker for ticker, c in partition.items() if c == cid]
+        has_crypto = any('-USD' in m or m.startswith('BTC') for m in members)
+        has_stock = any('-USD' not in m and not m.startswith('BTC') for m in members)
+        if (not show_mixed_only) or (has_crypto and has_stock):
+            print(f"\n🧠 Cluster {cid} ({'MIXED' if has_crypto and has_stock else 'CRYPTO' if has_crypto else 'STOCK'}):")
+            print(members)
 
-    # Option 1 (continued): return returns dataframe with cluster-mapped columns
+    # Filter returns to clustered tickers
     clustered_returns = returns.copy()
-    clustered_returns.columns.name = None  # remove pivot-level name
+    clustered_returns.columns.name = None
     clustered_returns = clustered_returns.loc[:, clustered_returns.columns.intersection(cluster_df['ticker'])]
 
-    # Optional: plot the graph
+    # Optional: Plot network
     if plot:
         pos = nx.spring_layout(G, seed=42, k=0.3)
-        cmap = plt.get_cmap('tab10')
-        plt.figure(figsize=(12, 8))
-        nx.draw_networkx_nodes(G, pos, node_size=500,
-                               node_color=[partition[n] for n in G.nodes()],
-                               cmap=cmap)
+        node_colors = ['blue' if '-USD' in n or n.startswith('BTC') else 'orange' for n in G.nodes()]
+        cmap = get_cmap('tab10')
+
+        plt.figure(figsize=(14, 10))
+        nx.draw_networkx_nodes(G, pos, node_size=500, node_color=node_colors)
         nx.draw_networkx_edges(G, pos, alpha=0.3)
         nx.draw_networkx_labels(G, pos, font_size=9)
-        plt.title("Louvain Clustering of Crypto Correlation Network")
+        plt.title(f"Louvain Correlation Graph (min_corr={min_corr})")
         plt.axis('off')
         plt.show()
 
-    # Return: cluster labels, Louvain graph, and filtered returns
+    # Print unconnected nodes
+    unconnected = [n for n in corr.columns if n not in G.nodes]
+    print(f"🪫 Unconnected tickers ({len(unconnected)}):", unconnected)
+
     return cluster_df, G, clustered_returns
+
+
 
 
 

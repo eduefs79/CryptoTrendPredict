@@ -26,3 +26,5 @@ python-louvain
 requests
 get-all-tickers
 lxml
+xgboost
+tensorflow
