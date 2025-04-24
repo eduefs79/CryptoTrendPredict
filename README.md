@@ -67,6 +67,29 @@ pip install -r requirements.txt
 
 ---
 
+## 🔄 Dataflow Overview
+
+The following diagram shows the overall pipeline from data ingestion to model evaluation:
+
+
+```mermaid
+flowchart TD
+    A[Yahoo Finance / Snowflake SQL] --> B[Raw OHLCV Data]
+    B --> C[Clean & Impute Missing Values]
+    C --> D1[Price Matrix (Pivoted)]
+    C --> D2[TA Features (BTC)]
+    D1 --> E[Cluster Analysis (Louvain)]
+    D2 --> F[Linear Regression]
+    E --> G[Peer Prices]
+    G --> F
+    G --> H[LSTM Model]
+    F --> I[Metrics & Residuals]
+    H --> I
+    I --> J[Model Evaluation]
+```
+
+---
+
 ## 🧠 Model Insights
 
 ### ✅ Linear Regression (with reduced features)
