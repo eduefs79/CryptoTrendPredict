@@ -192,6 +192,8 @@ Your notebook will now securely connect to Snowflake using your key.
 - Animate Louvain clusters over time (rolling windows)
 - Score and track BTC’s influence in the network via graph centrality
 - Explore hybrid models (LSTM + Attention) and multistep forecasting
+- Variance inflation factor
+- SHapley Additive exPlanations
 - Expose the best model as a REST API or Power BI dashboard
 
 ---
