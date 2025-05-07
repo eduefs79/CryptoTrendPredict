@@ -1,5 +1,5 @@
 
-name: Secret Scan with TruffleHog (Docker v3)
+name: Secret Scan with TruffleHog (Docker v4)
 
 on:
   push:
@@ -9,14 +9,14 @@ on:
 
 jobs:
   trufflehog-docker:
-    name: Docker-based TruffleHog v3 Scan
+    name: Docker-based TruffleHog v4 Scan
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Run TruffleHog v3 in Docker
+      - name: Run TruffleHog v4 in Docker
         run: |
           docker run --rm -v ${{ github.workspace }}:/repo ghcr.io/trufflesecurity/trufflehog:latest   git file:///repo  --only-verified --json > trufflehog_report.json
 
