@@ -1,4 +1,5 @@
-name: Secret Scan with TruffleHog
+
+name: Secret Scan with TruffleHog (Docker v3)
 
 on:
   push:
@@ -7,24 +8,27 @@ on:
     branches: [ main ]
 
 jobs:
-  trufflehog-scan:
-    name: Scan for secrets
+  trufflehog-docker:
+    name: Docker-based TruffleHog v3 Scan
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install TruffleHog
+      - name: Run TruffleHog v3 in Docker
         run: |
-          pip install truffleHog
+          docker run --rm -v ${{ github.workspace }}:/repo ghcr.io/trufflesecurity/trufflehog:latest             git file:///repo --only-verified --json > trufflehog_report.json
 
-      - name: Run TruffleHog scan
+      - name: Upload Report
+        uses: actions/upload-artifact@v3.1.3
+        with:
+          name: trufflehog_docker_report
+          path: trufflehog_report.json
+
+      - name: Fail on secret match
         run: |
-          trufflehog git file://$(pwd) --only-verified --json > trufflehog_report.json
-
-#      - name: Upload Report
-#        uses: actions/upload-artifact@v3.1.3
-#        with:
-#          name: trufflehog_report
-#          path: trufflehog_report.json
+          if grep -q '"Verified": true' trufflehog_report.json; then
+            echo "❌ Secret detected! Failing build."
+            exit 1
+          fi
