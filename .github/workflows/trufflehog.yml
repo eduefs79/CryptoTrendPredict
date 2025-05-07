@@ -24,7 +24,7 @@ jobs:
           trufflehog git file://$(pwd) --only-verified --json > trufflehog_report.json
 
       - name: Upload Report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v3.1.3
         with:
           name: trufflehog_report
           path: trufflehog_report.json
