@@ -21,7 +21,7 @@ jobs:
           docker run --rm -v ${{ github.workspace }}:/repo ghcr.io/trufflesecurity/trufflehog:latest   git file:///repo --depth=1 --no-external --only-verified --json > trufflehog_report.json
 
       - name: Upload Report
-        uses: actions/upload-artifact@v3.1.3
+        uses: actions/upload-artifact@v4
         with:
           name: trufflehog_docker_report
           path: trufflehog_report.json
