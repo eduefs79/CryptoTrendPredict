@@ -197,6 +197,11 @@ Your notebook will now securely connect to Snowflake using your key.
 - Expose the best model as a REST API or Power BI dashboard
 
 ---
+## 📉 Why Time Series Modeling Was Intentionally Excluded
+
+While traditional time series models (e.g., ARIMA, Prophet) are commonly used in financial forecasting, I opted not to integrate them directly into this crypto prediction pipeline. Instead, the model leverages technical indicators, market network clustering (e.g., Louvain method), and regression techniques that already encapsulate key temporal dynamics, such as trend and volatility.
+
+Time series models often assume a degree of stationarity or autocorrelation that is weak or unstable in high-volatility assets like cryptocurrencies. Given the already robust performance of the current feature set and the noisy nature of crypto markets, time series forecasting was evaluated but not adopted as it would likely contribute marginal additional signal. However, it remains a complementary option for long-term portfolio modeling or for generating probabilistic return bands in future iterations.
 
 Made with ❤️ and insomnia.
 
