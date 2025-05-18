@@ -25,6 +25,8 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import networkx as nx
 import community  # aka python-louvain
+import requests_cache
+import shap
 
 
 def upload_file(df: pd.DataFrame, stage_area: str, private_key,filename: str = 'default.parquet') -> None:
@@ -77,10 +79,6 @@ def upload_file(df: pd.DataFrame, stage_area: str, private_key,filename: str = '
 
 
 
-
-
-
-
 def download_yahoo_to_stage(
     ticker: str,
     private_key,
@@ -92,25 +90,26 @@ def download_yahoo_to_stage(
 ) -> None:
 
     print(f"🔍 Downloading data for {ticker} from Yahoo Finance...")
-    df = yf.download(ticker, interval=interval, start=start)
+    try:
+        df = yf.download(ticker, interval=interval, start=start)
+    except Exception as e:
+        print(f"❌ Failed to fetch Yahoo Finance data for {ticker}: {e}")
+        df = pd.DataFrame()
 
-    # If Yahoo fails, try CoinMarketCap
     if df.empty:
         print(f"⚠️ No data returned for {ticker} from Yahoo Finance.")
-
-        if '-' in ticker and ticker.split('-')[0] in ['BTC', 'ETH', 'LTC']:  # Add more cryptos if needed
-            print(f"🔄 Trying CoinMarketCap for {ticker}...")
+        if '-' in ticker and ticker.split('-')[0] in ['BTC', 'ETH', 'LTC']:
+            print(f"🔄 Trying CoinGecko for {ticker}...")
             df = get_coingecko_crypto_data(
-                    ticker=ticker,
-                    start=start,
-                    end=pd.Timestamp.today().strftime('%Y-%m-%d'),
-                    interval=interval
-                )
+                ticker=ticker,
+                start=start,
+                end=pd.Timestamp.today().strftime('%Y-%m-%d'),
+                interval=interval
+            )
         if df.empty:
             print(f"⛔ Still no data. Skipping {ticker}")
             return
 
-    # ✅ Continue with formatting
     df.reset_index(inplace=True)
 
     if isinstance(df.columns, pd.MultiIndex):
@@ -129,12 +128,15 @@ def download_yahoo_to_stage(
     df = df[[col for col in base_cols if col in df.columns]]
     df['ticker'] = ticker
 
-    # 🌍 Convert to USD if needed
     if '-' in ticker and not ticker.endswith('USD'):
         currency = ticker.split('-')[-1]
         fx_ticker = f"{currency}=X"
         print(f"🌐 Downloading FX rate: {fx_ticker} for conversion to USD...")
-        fx = yf.download(fx_ticker, interval=interval, start=start)
+        try:
+            fx = yf.download(fx_ticker, interval=interval, start=start)
+        except Exception as e:
+            print(f"❌ Failed to fetch FX rate: {e}")
+            fx = pd.DataFrame()
 
         if fx.empty or 'Close' not in fx:
             print(f"⚠️ FX rate data unavailable for {fx_ticker}. Skipping conversion.")
@@ -692,3 +694,40 @@ def plot_ticker_neighborhood(G, central_node='BTC-USD', hops=2):
     plt.axis('off')
     plt.show()
 
+
+
+def explain_lstm_with_shap(model, X_train, X_test, feature_cols, time_steps=60, 
+                           background_size=100, sample_size=100, nsamples=50, 
+                           plot_filename="shap_lstm_summary.png"):
+
+    # Flatten for SHAP: (samples, time_steps × features)
+    X_train_2d = X_train.reshape(X_train.shape[0], -1)
+    X_test_2d = X_test.reshape(X_test.shape[0], -1)
+
+    # Sample background and test inputs
+    np.random.seed(42)
+    idx_background = np.random.choice(X_train_2d.shape[0], background_size, replace=False)
+    idx_sample = np.random.choice(X_test_2d.shape[0], sample_size, replace=False)
+    X_background = X_train_2d[idx_background]
+    X_sample = X_test_2d[idx_sample]
+
+    # Define SHAP-compatible prediction function
+    def model_predict(X_flat):
+        return model.predict(X_flat.reshape((X_flat.shape[0], time_steps, -1)))
+
+    # Run SHAP KernelExplainer
+    print("⚙️ Running SHAP KernelExplainer...")
+    explainer = shap.KernelExplainer(model_predict, X_background)
+    shap_values = explainer.shap_values(X_sample, nsamples=nsamples)
+    shap_values = np.squeeze(shap_values)  # (samples, features)
+
+    # Build feature names
+    feature_names = []
+    for i in range(time_steps):
+        feature_names.extend([f"{feat}_t-{time_steps - i}" for feat in feature_cols])
+
+    # Plot and save
+    print(f"📊 Plotting SHAP summary and saving to {plot_filename}...")
+    shap.summary_plot(shap_values, X_sample, feature_names=feature_names, plot_type="bar", show=False)
+    plt.savefig(plot_filename, bbox_inches="tight")
+    print("✅ SHAP summary plot saved.")

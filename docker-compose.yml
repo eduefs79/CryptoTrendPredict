@@ -2,8 +2,12 @@ services:
   jupyter:
     image: cryptotrendpredict:latest
     container_name: jupyter-crypto
-    env_file:
-      - .env
+    runtime: nvidia 
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - JUPYTER_ENABLE_LAB=yes
+      - TF_CPP_MIN_LOG_LEVEL=2
+      - TF_ENABLE_ONEDNN_OPTS=0
     volumes:
       - ./:/home/jovyan/files
     networks:
@@ -11,8 +15,6 @@ services:
         ipv4_address: 172.29.0.3
     ports:
       - "8888:8888"
-    environment:
-      - JUPYTER_ENABLE_LAB=yes
     command: jupyter lab --ip=0.0.0.0 --no-browser --allow-root --NotebookApp.token=''
 
 networks:

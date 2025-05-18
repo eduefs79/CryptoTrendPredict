@@ -187,14 +187,26 @@ Your notebook will now securely connect to Snowflake using your key.
 
 ---
 
-## 🤖 What's Next
+## 🔬 Advanced Analyses and Enhancements
 
-- Animate Louvain clusters over time (rolling windows)
-- Score and track BTC’s influence in the network via graph centrality
-- Explore hybrid models (LSTM + Attention) and multistep forecasting
-- Variance inflation factor
-- SHapley Additive exPlanations
-- Expose the best model as a REST API or Power BI dashboard
+- 📹 Animate Louvain clusters over time using rolling windows
+- 🧠 Score and monitor BTC’s influence using graph centrality metrics (eigenvector, betweenness)
+- 🤖 Explore hybrid deep learning models (e.g., LSTM + Attention) and multi-step forecasting
+- 📉 Evaluate multicollinearity using Variance Inflation Factor (VIF)
+- 🧩 Model explainability with SHapley Additive exPlanations (SHAP)
+  - 🧮 Applied SHAP to linear regression model to interpret feature importance. Bollinger Bands and EMAs were found to be the most influential predictors of BTC price.
+- 📊 Benchmark performance against naive models (e.g., previous value, moving average)
+- 📈 Visualize true vs predicted prices, residual trends, and percentage-based errors
+- 🌐 Expose the best-performing model as a REST API or Power BI dashboard
+
+---
+
+### 🔍 SHAP Summary: LSTM Feature Importance
+
+The LSTM model primarily relies on historical price movements of peer cryptocurrencies such as `ETC`, `BCH`, `XTZ`, and `ALGO` to predict BTC price deltas. Feature contributions span multiple time steps, confirming the temporal depth learned by the model.
+This LSTM+SHAP analysis reveals that recent price movements of major altcoins like Ethereum (ETH), Binance Coin (BNB), and Stellar (XLM) exert strong short-term influence on Bitcoin price predictions. The model consistently assigns high importance to these assets' prices in the past 1–5 days, validating inter-token predictive relationships in the crypto ecosystem.
+
+![SHAP Summary](shap_lstm_v1.png)
 
 ---
 ## 📉 Why Time Series Modeling Was Intentionally Excluded

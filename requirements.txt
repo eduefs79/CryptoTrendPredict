@@ -17,8 +17,8 @@ ta-lib
 matplotlib
 yfinance
 openai
-google-cloud-bigquery
-tradingpattern
+#google-cloud-bigquery
+#tradingpattern
 seaborn
 fastparquet
 networkx
@@ -27,4 +27,7 @@ requests
 get-all-tickers
 lxml
 xgboost
-tensorflow
+#protobuf==3.20.3
+#tensorflow
+requests_cache
+shap
