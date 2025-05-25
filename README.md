@@ -207,10 +207,20 @@ Your notebook will now securely connect to Snowflake using your key.
 
 ### 🔍 SHAP Summary: LSTM Feature Importance
 
-The LSTM model primarily relies on historical price movements of peer cryptocurrencies such as `ETC`, `BCH`, `XTZ`, and `ALGO` to predict BTC price deltas. Feature contributions span multiple time steps, confirming the temporal depth learned by the model.
-This LSTM+SHAP analysis reveals that recent price movements of major altcoins like Ethereum (ETH), Binance Coin (BNB), and Stellar (XLM) exert strong short-term influence on Bitcoin price predictions. The model consistently assigns high importance to these assets' prices in the past 1–5 days, validating inter-token predictive relationships in the crypto ecosystem.
+The SHAP analysis reveals that XRP and ETH dominate short-term predictive influence on BTC price. 
+XRP-related signals from `t-2` to `t-6` are especially prominent, indicating strong short-horizon correlation. ETH follows closely, also contributing meaningfully across several recent timesteps.
+
+These results highlight how inter-token dynamics, especially among large-cap assets, drive short-term price movements in Bitcoin. The LSTM model is successfully capturing these temporal dependencies across the clustered peer network.
 
 ![SHAP Summary](shap_lstm_v1.png)
+
+### 🌐 Crypto Influence Map
+
+The influence map aggregates SHAP values by token and visualizes their direct influence on BTC prediction.
+
+Louvain filtering was applied to isolate high-correlation assets, improving SHAP interpretability and reducing noise.
+
+![Crypto Influence Map](shap_crypto_influence.png)
 
 ---
 ## 📉 Why Time Series Modeling Was Intentionally Excluded
