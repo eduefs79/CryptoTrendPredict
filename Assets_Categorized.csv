@@ -98,14 +98,8 @@ S&P 500,^GSPC,Market Index,Index,^GSPC
 Gold,GC=F,Gold,Gold,GC=F
 Silver,SI=F,Silver,Silver,SI=F
 Bitcoin India,BTC,Layer 1,Crypto,BTC-INR
-Bitcoin Vietnam,BTC,Layer 1,Crypto,BTC-VND
-Bitcoin Pakistan,BTC,Layer 1,Crypto,BTC-PKR
-Bitcoin Brazil,BTC,Layer 1,Crypto,BTC-BRL
-Bitcoin Thailand,BTC,Layer 1,Crypto,BTC-THB
 Bitcoin Russia,BTC,Layer 1,Crypto,BTC-RUB
 Bitcoin China,BTC,Layer 1,Crypto,BTC-CNY
-Bitcoin Nigeria,BTC,Layer 1,Crypto,BTC-NGN
-Bitcoin Philippines,BTC,Layer 1,Crypto,BTC-PHP
 Bitcoin United Kingdom,BTC,Layer 1,Crypto,BTC-GBP
 Adobe Inc.,ADBE,Nasdaq-100,Stock,ADBE
 Advanced Micro Devices,AMD,Nasdaq-100,Stock,AMD

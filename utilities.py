@@ -27,6 +27,9 @@ import networkx as nx
 import community  # aka python-louvain
 import requests_cache
 import shap
+from IPython.display import display
+import plotly.graph_objects as go
+
 
 
 def upload_file(df: pd.DataFrame, stage_area: str, private_key,filename: str = 'default.parquet') -> None:
@@ -599,36 +602,27 @@ def louvain_from_returns(df, value_col='close', min_corr=0.5, plot=True, show_mi
     import numpy as np
     import pandas as pd
     import networkx as nx
-    import matplotlib.pyplot as plt
     import community  # python-louvain
-    from matplotlib.cm import get_cmap
+    import plotly.graph_objects as go
 
-    # Step 1: Pivot + fill gaps due to mixed trading calendars
     price_df = df.pivot(index='date', columns='ticker', values=value_col)
     price_df = price_df.ffill().bfill().fillna(price_df.mean())
 
-    # Optional: print tickers being used
     print("✅ Tickers included after fill:", price_df.columns.tolist())
 
-    # Step 2: Compute log returns
     returns = np.log(price_df / price_df.shift(1)).dropna()
-
-    # Step 3: Correlation matrix
     corr = returns.corr()
 
-    # Step 4: Build correlation graph
     G = nx.Graph()
     for i in corr.columns:
         for j in corr.columns:
             if i != j and corr.loc[i, j] > min_corr:
                 G.add_edge(i, j, weight=corr.loc[i, j], distance=1 - corr.loc[i, j])
 
-    # Step 5: Louvain clustering
     partition = community.best_partition(G, weight='weight')
     nx.set_node_attributes(G, partition, 'cluster')
     cluster_df = pd.DataFrame.from_dict(partition, orient='index', columns=['cluster']).reset_index().rename(columns={'index': 'ticker'})
 
-    # Print clusters
     print("📊 Louvain Clusters:")
     for cid in set(partition.values()):
         members = [ticker for ticker, c in partition.items() if c == cid]
@@ -638,96 +632,247 @@ def louvain_from_returns(df, value_col='close', min_corr=0.5, plot=True, show_mi
             print(f"\n🧠 Cluster {cid} ({'MIXED' if has_crypto and has_stock else 'CRYPTO' if has_crypto else 'STOCK'}):")
             print(members)
 
-    # Filter returns to clustered tickers
     clustered_returns = returns.copy()
     clustered_returns.columns.name = None
     clustered_returns = clustered_returns.loc[:, clustered_returns.columns.intersection(cluster_df['ticker'])]
 
-    # Optional: Plot network
     if plot:
         pos = nx.spring_layout(G, seed=42, k=0.3)
-        node_colors = ['blue' if '-USD' in n or n.startswith('BTC') else 'orange' for n in G.nodes()]
-        cmap = get_cmap('tab10')
+        clusters = nx.get_node_attributes(G, 'cluster')
+        cluster_ids = list(set(clusters.values()))
+        cluster_colors = {cid: f"hsl({(cid * 50) % 360},70%,50%)" for cid in cluster_ids}
 
-        plt.figure(figsize=(14, 10))
-        nx.draw_networkx_nodes(G, pos, node_size=500, node_color=node_colors)
-        nx.draw_networkx_edges(G, pos, alpha=0.3)
-        nx.draw_networkx_labels(G, pos, font_size=9)
-        plt.title(f"Louvain Correlation Graph (min_corr={min_corr})")
-        plt.axis('off')
-        plt.show()
+        node_x, node_y, node_text, node_color = [], [], [], []
+        for node in G.nodes():
+            x, y = pos[node]
+            node_x.append(x)
+            node_y.append(y)
+            cluster = clusters.get(node, -1)
+            node_color.append(cluster_colors.get(cluster, "#999999"))
+            node_text.append(f"{node}<br>Cluster: {cluster}")
 
-    # Print unconnected nodes
+        node_trace = go.Scatter(
+            x=node_x, y=node_y, mode='markers+text', textposition='top center',
+            text=[node for node in G.nodes()],
+            hovertext=node_text, hoverinfo='text',
+            marker=dict(size=12, color=node_color, line_width=1)
+        )
+
+        edge_x, edge_y = [], []
+        for edge in G.edges():
+            x0, y0 = pos[edge[0]]
+            x1, y1 = pos[edge[1]]
+            edge_x.extend([x0, x1, None])
+            edge_y.extend([y0, y1, None])
+
+        edge_trace = go.Scatter(
+            x=edge_x, y=edge_y,
+            line=dict(width=0.5, color='#888'),
+            hoverinfo='none',
+            mode='lines'
+        )
+
+        fig = go.Figure(data=[edge_trace, node_trace],
+                        layout=go.Layout(
+                            title=dict(text="Louvain Correlation Graph (Interactive, height=700)", font_size=16),
+                            showlegend=False,
+                            hovermode='closest',
+                            margin=dict(b=20, l=5, r=5, t=40),
+                            xaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
+                            yaxis=dict(showgrid=False, zeroline=False, showticklabels=False)
+                        ))
+        fig.show()
+
     unconnected = [n for n in corr.columns if n not in G.nodes]
     print(f"🪫 Unconnected tickers ({len(unconnected)}):", unconnected)
 
     return cluster_df, G, clustered_returns
 
-
-
-
-
 def plot_ticker_neighborhood(G, central_node='BTC-USD', hops=2):
-    # Step 1: Get all nodes within `hops` from BTC-USD
+
+
     btc_subgraph_nodes = nx.single_source_shortest_path_length(G, central_node, cutoff=hops).keys()
-    
-    # Step 2: Extract subgraph
     subG = G.subgraph(btc_subgraph_nodes)
 
-    # Optional: re-run Louvain just on the subgraph
     partition = community.best_partition(subG, weight='weight')
     nx.set_node_attributes(subG, partition, 'cluster')
 
-   
-    # Step 3: Visualize
     pos = nx.spring_layout(subG, seed=42, k=0.3)
-    cmap = plt.get_cmap('tab10')
+    cluster_ids = list(set(partition.values()))
+    cluster_colors = {cid: f"hsl({(cid * 50) % 360},70%,50%)" for cid in cluster_ids}
 
-    
-    plt.figure(figsize=(10, 7))
-    nx.draw_networkx_nodes(subG, pos, node_color=[partition[n] for n in subG.nodes()],
-                           node_size=600, cmap=cmap)
-    nx.draw_networkx_edges(subG, pos, alpha=0.4)
-    nx.draw_networkx_labels(subG, pos, font_size=9)
-    
-    plt.title(f'Louvain Subgraph: Nodes within {hops} hops from {central_node}')
-    plt.axis('off')
-    plt.show()
+    node_x, node_y, node_text, node_color = [], [], [], []
+    for node in subG.nodes():
+        x, y = pos[node]
+        node_x.append(x)
+        node_y.append(y)
+        cluster = partition.get(node, -1)
+        node_color.append(cluster_colors.get(cluster, "#999999"))
+        node_text.append(f"{node}<br>Cluster: {cluster}")
 
+    node_trace = go.Scatter(
+        x=node_x, y=node_y, mode='markers+text', textposition='top center',
+        text=[node for node in subG.nodes()],
+        hovertext=node_text, hoverinfo='text',
+        marker=dict(size=12, color=node_color, line_width=1)
+    )
+
+    edge_x, edge_y = [], []
+    for edge in subG.edges():
+        x0, y0 = pos[edge[0]]
+        x1, y1 = pos[edge[1]]
+        edge_x.extend([x0, x1, None])
+        edge_y.extend([y0, y1, None])
+
+    edge_trace = go.Scatter(
+        x=edge_x, y=edge_y,
+        line=dict(width=0.5, color='#888'),
+        hoverinfo='none',
+        mode='lines'
+    )
+
+    fig = go.Figure(data=[edge_trace, node_trace],
+                    layout=go.Layout(
+                        title=dict(text=f'Louvain Subgraph: Nodes within {hops} hops from {central_node}', font_size=16, height=700),
+                        showlegend=False,
+                        hovermode='closest',
+                        margin=dict(b=20, l=5, r=5, t=40),
+                        xaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
+                        yaxis=dict(showgrid=False, zeroline=False, showticklabels=False)
+                    ))
+    fig.show()
 
 
 def explain_lstm_with_shap(model, X_train, X_test, feature_cols, time_steps=60, 
-                           background_size=100, sample_size=100, nsamples=50, 
-                           plot_filename="shap_lstm_summary.png"):
+                           background_size=300, sample_size=100, nsamples=100, 
+                           plot_filename="shap_lstm_summary.png", 
+                           plot_influence='shap_crypto_influence'):
 
-    # Flatten for SHAP: (samples, time_steps × features)
-    X_train_2d = X_train.reshape(X_train.shape[0], -1)
-    X_test_2d = X_test.reshape(X_test.shape[0], -1)
+    import shap
+    import numpy as np
+    import matplotlib.pyplot as plt
+    import plotly.graph_objects as go
+    from IPython.display import display
+    import tensorflow as tf
+    import os
 
-    # Sample background and test inputs
+    print("🔎 Input shapes:")
+    print(f" - X_train shape: {X_train.shape}")
+    print(f" - X_test shape: {X_test.shape}")
+
+    print("🚀 Warming up model on GPU...")
+    _ = model.predict(X_train[:1])  # Warm-up
+
+    # Sample and flatten
     np.random.seed(42)
-    idx_background = np.random.choice(X_train_2d.shape[0], background_size, replace=False)
-    idx_sample = np.random.choice(X_test_2d.shape[0], sample_size, replace=False)
-    X_background = X_train_2d[idx_background]
-    X_sample = X_test_2d[idx_sample]
+    idx_background = np.random.choice(X_train.shape[0], background_size, replace=False)
+    idx_sample = np.random.choice(X_test.shape[0], sample_size, replace=False)
+    X_background_3d = X_train[idx_background]
+    X_sample_3d = X_test[idx_sample]
+    X_background = X_background_3d.reshape(background_size, -1)
+    X_sample = X_sample_3d.reshape(sample_size, -1)
 
-    # Define SHAP-compatible prediction function
     def model_predict(X_flat):
         return model.predict(X_flat.reshape((X_flat.shape[0], time_steps, -1)))
 
-    # Run SHAP KernelExplainer
-    print("⚙️ Running SHAP KernelExplainer...")
-    explainer = shap.KernelExplainer(model_predict, X_background)
-    shap_values = explainer.shap_values(X_sample, nsamples=nsamples)
-    shap_values = np.squeeze(shap_values)  # (samples, features)
+    # Try GPU KernelExplainer
+    try:
+        print("⚙️ Running SHAP KernelExplainer (GPU)...")
+        explainer = shap.KernelExplainer(model_predict, X_background)
+        shap_values = explainer.shap_values(X_sample, nsamples=nsamples)
+        shap_values = np.squeeze(shap_values)
+        print("✅ SHAP computed using GPU.")
 
-    # Build feature names
+    except Exception as e:
+        print(f"⚠️ GPU SHAP failed: {e}")
+        print("🔁 Retrying SHAP with CPU mode...")
+        os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+
+        # Resample and reshape (to avoid session contamination)
+        X_background = X_background_3d.reshape(background_size, -1)
+        X_sample = X_sample_3d.reshape(sample_size, -1)
+
+        def model_predict_cpu(X_flat):
+            return model.predict(X_flat.reshape((X_flat.shape[0], time_steps, -1)))
+
+        explainer = shap.KernelExplainer(model_predict_cpu, X_background)
+        shap_values = explainer.shap_values(X_sample, nsamples=nsamples)
+        shap_values = np.squeeze(shap_values)
+        print("✅ SHAP fallback on CPU completed.")
+
+    # Feature names
     feature_names = []
     for i in range(time_steps):
         feature_names.extend([f"{feat}_t-{time_steps - i}" for feat in feature_cols])
 
-    # Plot and save
-    print(f"📊 Plotting SHAP summary and saving to {plot_filename}...")
+    print(f"📊 Saving SHAP summary to {plot_filename}...")
     shap.summary_plot(shap_values, X_sample, feature_names=feature_names, plot_type="bar", show=False)
     plt.savefig(plot_filename, bbox_inches="tight")
     print("✅ SHAP summary plot saved.")
+
+    # --- Influence map ---
+    print("📊 Creating Crypto Influence Map...")
+    shap_abs = np.abs(shap_values).mean(axis=0)
+    aggregated = {}
+    for i in range(time_steps):
+        for j, feat in enumerate(feature_cols):
+            idx = i * len(feature_cols) + j
+            key = feat
+            aggregated[key] = aggregated.get(key, 0) + shap_abs[idx]
+
+    total = sum(aggregated.values())
+    shap_importance = {k: v / total for k, v in aggregated.items() if v / total > 0.01}
+
+    nodes = list(shap_importance.keys()) + ['BTC-USD']
+    edges = [(src, 'BTC-USD', w) for src, w in shap_importance.items()]
+    positions = {'BTC-USD': (0, 0)}
+    angle_step = 2 * np.pi / len(shap_importance)
+    radius = 1.5
+    for i, node in enumerate(shap_importance.keys()):
+        angle = i * angle_step
+        positions[node] = (radius * np.cos(angle), radius * np.sin(angle))
+
+    edge_x, edge_y = [], []
+    node_x, node_y, node_text, node_color, node_size = [], [], [], [], []
+    for src, tgt, weight in edges:
+        x0, y0 = positions[src]
+        x1, y1 = positions[tgt]
+        edge_x += [x0, x1, None]
+        edge_y += [y0, y1, None]
+
+    for node in nodes:
+        x, y = positions[node]
+        node_x.append(x)
+        node_y.append(y)
+        if node == 'BTC-USD':
+            node_color.append('gold')
+            node_size.append(30)
+            node_text.append(f"{node} (target)")
+        else:
+            node_color.append('lightblue')
+            node_size.append(20)
+            node_text.append(f"{node}: {shap_importance[node]:.2f}")
+
+    edge_trace = go.Scatter(x=edge_x, y=edge_y, mode='lines',
+                            line=dict(width=2, color='gray'), hoverinfo='none')
+    node_trace = go.Scatter(x=node_x, y=node_y, mode='markers+text',
+                            text=node_text, textposition='top center',
+                            marker=dict(color=node_color, size=node_size,
+                                        line=dict(width=2, color='black')),
+                            hoverinfo='text')
+
+    fig = go.Figure(data=[edge_trace, node_trace],
+                    layout=go.Layout(
+                        title=dict(text="🧠 Crypto Influence Map (SHAP)", font_size=20),
+                        showlegend=False,
+                        hovermode='closest',
+                        margin=dict(b=20, l=5, r=5, t=40),
+                        xaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
+                        yaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
+                        height=600
+                    ))
+
+    fig.write_html(f"{plot_influence}.html")
+    fig.write_image(f"{plot_influence}.png")
+    display(fig)
+    print("✅ SHAP influence map saved and displayed.")

@@ -198,6 +198,10 @@ Your notebook will now securely connect to Snowflake using your key.
 - 📊 Benchmark performance against naive models (e.g., previous value, moving average)
 - 📈 Visualize true vs predicted prices, residual trends, and percentage-based errors
 - 🌐 Expose the best-performing model as a REST API or Power BI dashboard
+- 📎 Expand SHAP explainability to include traditional assets (e.g., AAPL, MSFT, GLD) that may indirectly influence BTC, even if excluded from Louvain clusters.
+- 🧠 Implement top-N token filtering or feature pruning to enable SHAP analysis without hitting GPU memory constraints.
+- ☁️ Test high-dimensional SHAP explanations using Google Colab Pro (A100 GPU) or local distributed inference environments.
+
 
 ---
 
@@ -216,4 +220,12 @@ While traditional time series models (e.g., ARIMA, Prophet) are commonly used in
 Time series models often assume a degree of stationarity or autocorrelation that is weak or unstable in high-volatility assets like cryptocurrencies. Given the already robust performance of the current feature set and the noisy nature of crypto markets, time series forecasting was evaluated but not adopted as it would likely contribute marginal additional signal. However, it remains a complementary option for long-term portfolio modeling or for generating probabilistic return bands in future iterations.
 
 Made with ❤️ and insomnia.
+
+### 🚧 Known Limitation
+
+Due to the memory complexity of SHAP with full LSTM input (60 timesteps × 140+ tokens), 
+explanations are currently computed only within the Louvain-filtered cluster around BTC. 
+This improves model interpretability and reduces dimensionality for SHAP.
+
+
 
